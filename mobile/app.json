@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "BeAstar",
+    "slug": "beastar",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0B0B12"
+    },
+    "ios": {
+      "bundleIdentifier": "io.beastar.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "BeAstar needs camera access to verify it's really you before creating videos.",
+        "NSPhotoLibraryUsageDescription": "BeAstar needs photo access so you can pick the photo you want to become the star in."
+      }
+    },
+    "android": {
+      "package": "io.beastar.app",
+      "permissions": ["CAMERA", "READ_MEDIA_IMAGES"]
+    }
+  }
+}

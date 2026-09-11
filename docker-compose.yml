@@ -1,0 +1,199 @@
+# BeAstar.io - Docker Compose Configuration
+# ==========================================
+# Complete local development and production-ready setup
+# 
+# Services:
+# - backend: FastAPI application
+# - redis: Redis for Celery broker
+# - celery-worker: Background job processing
+# - celery-beat: Scheduled tasks
+#
+# Usage:
+#   Development: docker-compose up
+#   Production:  docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beastar-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Application
+      - APP_BASE_URL=http://localhost:8000
+      - USE_REAL_BACKEND=true
+      
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_KEY=${SUPABASE_KEY:-}
+      - SUPABASE_STORAGE_BUCKET=${SUPABASE_STORAGE_BUCKET:-generations}
+      
+      # AI Providers
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY:-}
+      - KLING_API_KEY=${KLING_API_KEY:-}
+      - KLING_API_BASE=${KLING_API_BASE:-https://api.kling.ai/v1}
+      
+      # AWS (for face verification and moderation)
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      
+      # Content Moderation
+      - HIVE_API_KEY=${HIVE_API_KEY:-}
+      - HIVE_API_BASE=${HIVE_API_BASE:-https://api.hive.ai}
+      
+      # Redis for Celery
+      - REDIS_URL=redis://redis:6379/0
+      
+      # Payments
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - PAYMONGO_SECRET_KEY=${PAYMONGO_SECRET_KEY:-}
+      - PAYMONGO_WEBHOOK_SECRET=${PAYMONGO_WEBHOOK_SECRET:-}
+      - PAYMONGO_API_BASE=${PAYMONGO_API_BASE:-https://api.paymongo.com/v1}
+      
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      # Mount app code for development (hot reload)
+      - ./backend:/app
+      # Logs
+      - ./logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health', timeout=5).raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Redis for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: beastar-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Celery Worker for Background Jobs
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beastar-celery-worker
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker", "worker", "--loglevel=INFO", "--concurrency=4"]
+    environment:
+      # Application
+      - APP_BASE_URL=http://localhost:8000
+      - USE_REAL_BACKEND=true
+      
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_KEY=${SUPABASE_KEY:-}
+      - SUPABASE_STORAGE_BUCKET=${SUPABASE_STORAGE_BUCKET:-generations}
+      
+      # AI Providers
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY:-}
+      - KLING_API_KEY=${KLING_API_KEY:-}
+      
+      # AWS
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      
+      # Redis
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      
+      # Content Moderation
+      - HIVE_API_KEY=${HIVE_API_KEY:-}
+      
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backend:/app
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - beastar-network
+
+  # Celery Beat for Scheduled Tasks
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beastar-celery-beat
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker", "beat", "--loglevel=INFO"]
+    environment:
+      # Application
+      - APP_BASE_URL=http://localhost:8000
+      - USE_REAL_BACKEND=true
+      
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_KEY=${SUPABASE_KEY:-}
+      
+      # Redis
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backend:/app
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - beastar-network
+
+  # Nginx Reverse Proxy (Optional - for production)
+  nginx:
+    image: nginx:alpine
+    container_name: beastar-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    networks:
+      - beastar-network
+    profiles:
+      - production
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  beastar-network:
+    driver: bridge

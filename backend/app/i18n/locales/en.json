@@ -1,0 +1,207 @@
+{
+  "app": {
+    "name": "BeAstar",
+    "tagline": "Become the star you imagine yourself to be",
+    "description": "Create AI-powered videos of yourself as your dream star persona, share your journey, and connect with others"
+  },
+  "auth": {
+    "signup": {
+      "title": "Create Your Star Account",
+      "email": "Email Address",
+      "email_placeholder": "Enter your email",
+      "display_name": "Display Name",
+      "display_name_placeholder": "Choose your star name",
+      "date_of_birth": "Date of Birth",
+      "country": "Country",
+      "referral_code": "Referral Code (Optional)",
+      "referral_code_placeholder": "Enter referral code",
+      "submit": "Create Account",
+      "terms": "By creating an account, you agree to our Terms of Service and Privacy Policy",
+      "age_requirement": "You must be at least 13 years old to use BeAstar"
+    },
+    "verify_face": {
+      "title": "Verify Your Identity",
+      "description": "Take a selfie to verify your identity. This helps prevent misuse and ensures a safe community.",
+      "instructions": "Look directly at the camera with good lighting",
+      "upload": "Upload Selfie",
+      "retake": "Retake",
+      "verifying": "Verifying...",
+      "success": "Verification successful! You're now ready to create.",
+      "failed": "Verification failed. Please try again."
+    }
+  },
+  "home": {
+    "title": "Become a Star",
+    "welcome": "Welcome to BeAstar",
+    "create_prompt": "Create your first Star Moment",
+    "recent": "Recent Creations",
+    "trending": "Trending",
+    "discover": "Discover"
+  },
+  "create": {
+    "title": "Create Star Moment",
+    "select_scenario": "Select a scenario",
+    "upload_selfie": "Upload your selfie",
+    "choose_resolution": "Choose resolution",
+    "resolution_720p": "720p (Standard)",
+    "resolution_1080p": "1080p (HD)",
+    "resolution_4k": "4K (Premium)",
+    "generate": "Generate Video",
+    "generating": "Creating your Star Moment...",
+    "estimated_time": "This usually takes 1-2 minutes",
+    "credits_required": "{credits} credits required",
+    "insufficient_credits": "Not enough credits. Get more to continue."
+  },
+  "scenarios": {
+    "red_carpet": "Red Carpet Arrival",
+    "movie_premiere": "Movie Premiere",
+    "concert": "Live Concert",
+    "awards_show": "Awards Show",
+    "music_video": "Music Video",
+    "fashion_show": "Fashion Show",
+    "interview": "Celebrity Interview",
+    "social_media": "Social Media Star",
+    "sports_hero": "Sports Hero",
+    "business_leader": "Business Leader"
+  },
+  "generation": {
+    "status": {
+      "queued": "Queued",
+      "rendering": "Rendering...",
+      "complete": "Complete!",
+      "failed": "Failed"
+    },
+    "progress": "Progress: {percent}%",
+    "time_remaining": "Time remaining: {time}",
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "timeout": "Generation timed out. Please try again.",
+      "moderation_failed": "Content moderation failed. Please try a different image.",
+      "insufficient_credits": "Not enough credits. Please purchase more."
+    }
+  },
+  "share": {
+    "title": "Share Your Star Moment",
+    "video_ready": "Your video is ready!",
+    "watch": "Watch",
+    "download": "Download",
+    "share": "Share",
+    "publish": "Publish",
+    "share_message": "Check out my Star Moment on BeAstar!",
+    "copied": "Link copied to clipboard",
+    "published": "Your Star Moment has been published!"
+  },
+  "dream_threads": {
+    "title": "Dream Threads",
+    "create": "Create Dream Thread",
+    "goal_title": "Your Dream Goal",
+    "goal_title_placeholder": "What do you want to become?",
+    "goal_description": "Describe your dream",
+    "goal_description_placeholder": "Tell us about your journey",
+    "net_worth": "Net Worth (Optional)",
+    "net_worth_note": "This is self-reported and unverified",
+    "create_thread": "Create Thread",
+    "post_update": "Post Update",
+    "update_placeholder": "What's new in your journey?",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "followers": "{count} followers",
+    "updates": "{count} updates",
+    "encourage": "Encourage",
+    "encouragements": "{count} encouragements",
+    "feed": "Your Feed",
+    "no_updates": "No updates yet. Follow some threads to see them here."
+  },
+  "challenges": {
+    "title": "Challenges",
+    "weekly": "Weekly Challenge",
+    "join": "Join Challenge",
+    "submit": "Submit Entry",
+    "vote": "Vote",
+    "votes": "{count} votes",
+    "leaderboard": "Leaderboard",
+    "ends_in": "Ends in {time}",
+    "ended": "Challenge ended",
+    "prize": "Prize: {prize}"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "global": "Global",
+    "country": "Country: {country}",
+    "rank": "Rank",
+    "name": "Name",
+    "videos": "Videos",
+    "referrals": "Referrals",
+    "no_data": "No data available"
+  },
+  "payments": {
+    "title": "Upgrade Your Account",
+    "tiers": {
+      "free": "Free",
+      "star": "Star",
+      "superstar": "Superstar",
+      "megastar": "Megastar"
+    },
+    "tier_description": {
+      "free": "3 daily generations, 720p resolution",
+      "star": "10 daily generations, 1080p resolution",
+      "superstar": "25 daily generations, 1080p resolution",
+      "megastar": "100 daily generations, 4K resolution"
+    },
+    "price": "{price} PHP",
+    "purchase": "Purchase Now",
+    "success": "Payment successful! Your account has been upgraded.",
+    "failed": "Payment failed. Please try again.",
+    "cancelled": "Payment cancelled"
+  },
+  "referrals": {
+    "title": "Invite Friends",
+    "description": "Share your referral code and earn credits when friends sign up",
+    "your_code": "Your Code: {code}",
+    "share_code": "Share Code",
+    "earned": "You've earned {credits} credits from referrals",
+    "how_it_works": "How it works",
+    "step1": "Share your unique referral code",
+    "step2": "Friends sign up using your code",
+    "step3": "You both get bonus credits"
+  },
+  "profile": {
+    "title": "Your Profile",
+    "edit": "Edit Profile",
+    "stats": "Your Stats",
+    "total_videos": "Total Videos",
+    "total_followers": "Followers",
+    "total_following": "Following",
+    "credits": "Credits",
+    "tier": "Tier",
+    "settings": "Settings",
+    "logout": "Log Out"
+  },
+  "errors": {
+    "network": "Network error. Please check your connection.",
+    "server": "Server error. Please try again later.",
+    "not_found": "Not found",
+    "unauthorized": "Unauthorized. Please log in.",
+    "forbidden": "Access denied",
+    "rate_limit": "Too many requests. Please wait and try again.",
+    "validation": "Please check your input and try again"
+  },
+  "buttons": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "try_again": "Try Again",
+    "continue": "Continue",
+    "next": "Next",
+    "back": "Back",
+    "save": "Save",
+    "delete": "Delete"
+  },
+  "moderation": {
+    "ai_disclosure": "AI-Generated Content",
+    "content_policy": "Content Policy",
+    "report": "Report",
+    "flagged": "This content has been flagged for review"
+  }
+}

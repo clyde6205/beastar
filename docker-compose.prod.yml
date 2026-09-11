@@ -1,0 +1,363 @@
+version: '3.8'
+
+# =============================================================================
+# BeAstar.io - Production Docker Compose Configuration
+# =============================================================================
+# 
+# Production-ready deployment with:
+# - Multiple backend workers (auto-scaling)
+# - Redis with persistence
+# - Celery workers for background job processing
+# - Celery beat for scheduled tasks
+# - Nginx reverse proxy with SSL termination
+# - Health checks and auto-restart policies
+# - Resource limits and security hardening
+#
+# Usage:
+#   docker-compose -f docker-compose.prod.yml up -d
+#
+# =============================================================================
+
+services:
+  # -------------------------------------------------------------------------
+  # Nginx Reverse Proxy
+  # -------------------------------------------------------------------------
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: beastar-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/logs:/var/log/nginx
+    environment:
+      - NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
+    depends_on:
+      - backend
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+
+  # -------------------------------------------------------------------------
+  # Backend API (FastAPI)
+  # -------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=production
+    image: beastar-backend:latest
+    container_name: beastar-backend
+    restart: unless-stopped
+    command: ["./scripts/start.sh"]
+    environment:
+      # Application
+      - APP_ENV=production
+      - APP_BASE_URL=https://beastar.io
+      - DEBUG=false
+      
+      # Database
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_STORAGE_BUCKET=selfies
+      
+      # Redis
+      - REDIS_URL=redis://beastar-redis:6379/0
+      
+      # AI Providers
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY}
+      - KLING_API_KEY=${KLING_API_KEY}
+      
+      # AWS (Face Verification & Moderation)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      
+      # Hive AI (Fallback Moderation)
+      - HIVE_API_KEY=${HIVE_API_KEY}
+      - HIVE_API_BASE=https://api.hive.ai
+      
+      # Payments
+      - PAYMONGO_SECRET_KEY=${PAYMONGO_SECRET_KEY}
+      - PAYMONGO_WEBHOOK_SECRET=${PAYMONGO_WEBHOOK_SECRET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      
+      # Rate Limiting
+      - RATE_LIMIT_ENABLED=true
+      
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=HS256
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/var/log/beastar/beastar.log
+    volumes:
+      - ./logs:/var/log/beastar
+      - ./temp:/tmp/beastar
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: false
+    tmpfs:
+      - /tmp
+
+  # -------------------------------------------------------------------------
+  # Celery Worker (Background Job Processing)
+  # -------------------------------------------------------------------------
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=production
+    image: beastar-backend:latest
+    container_name: beastar-celery-worker
+    restart: unless-stopped
+    command: ["./scripts/celery.sh", "worker"]
+    environment:
+      # Application
+      - APP_ENV=production
+      - APP_BASE_URL=https://beastar.io
+      
+      # Database
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_STORAGE_BUCKET=selfies
+      
+      # Redis
+      - REDIS_URL=redis://beastar-redis:6379/0
+      
+      # AI Providers
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY}
+      - KLING_API_KEY=${KLING_API_KEY}
+      
+      # AWS
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      
+      # Hive AI
+      - HIVE_API_KEY=${HIVE_API_KEY}
+      
+      # Payments
+      - PAYMONGO_SECRET_KEY=${PAYMONGO_SECRET_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      
+      # Celery Configuration
+      - CELERY_WORKER_CONCURRENCY=4
+      - CELERY_WORKER_MAX_TASKS_PER_CHILD=100
+      - CELERY_WORKER_MAX_MEMORY_PER_CHILD=500000
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/var/log/beastar/celery_worker.log
+    volumes:
+      - ./logs:/var/log/beastar
+      - ./temp:/tmp/beastar
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "celery", "-A", "app.worker", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: false
+
+  # -------------------------------------------------------------------------
+  # Celery Beat (Scheduled Tasks)
+  # -------------------------------------------------------------------------
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=production
+    image: beastar-backend:latest
+    container_name: beastar-celery-beat
+    restart: unless-stopped
+    command: ["./scripts/celery.sh", "beat"]
+    environment:
+      # Application
+      - APP_ENV=production
+      
+      # Database
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      
+      # Redis
+      - REDIS_URL=redis://beastar-redis:6379/0
+      
+      # AI Providers
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY}
+      - KLING_API_KEY=${KLING_API_KEY}
+      
+      # AWS
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/var/log/beastar/celery_beat.log
+    volumes:
+      - ./logs:/var/log/beastar
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "celery beat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  # -------------------------------------------------------------------------
+  # Redis (Message Broker & Result Backend)
+  # -------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: beastar-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "6379:6379"
+    networks:
+      - beastar-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: false
+
+# -------------------------------------------------------------------------
+# Volumes
+# -------------------------------------------------------------------------
+volumes:
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./data/redis
+      o: bind
+
+# -------------------------------------------------------------------------
+# Networks
+# -------------------------------------------------------------------------
+networks:
+  beastar-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1

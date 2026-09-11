@@ -1,0 +1,207 @@
+{
+  "app": {
+    "name": "BeAstar",
+    "tagline": "Maging bituin ang imahinasyong sarili mo",
+    "description": "Gumawa ng AI-powered na mga video ng iyong sarili bilang iyong pangarap na personalidad ng bituin, ibahagi ang iyong paglalakbay, at kumonekta sa iba"
+  },
+  "auth": {
+    "signup": {
+      "title": "Gumawa ng Iyong Star Account",
+      "email": "Email Address",
+      "email_placeholder": "Ilagay ang iyong email",
+      "display_name": "Pangalang Ipapakita",
+      "display_name_placeholder": "Piliin ang iyong pangalang bituin",
+      "date_of_birth": "Petsa ng Kapanganakan",
+      "country": "Bansa",
+      "referral_code": "Referral Code (Opsyonal)",
+      "referral_code_placeholder": "Ilagay ang referral code",
+      "submit": "Gumawa ng Account",
+      "terms": "Sa paggawa ng account, sumasang-ayon ka sa aming Mga Tuntunin ng Serbisyo at Patakaran sa Pagkapribado",
+      "age_requirement": "Dapat ay 13 taong gulang pataas para magamit ang BeAstar"
+    },
+    "verify_face": {
+      "title": "Patunayan ang Iyong Pagkakakilanlan",
+      "description": "Kunan ng selfie para patunayan ang iyong pagkakakilanlan. Ito ay makatutulong upang maiwasan ang pang-aabuso at matiyak ang ligtas na komunidad.",
+      "instructions": "Tumitig sa camera nang tuwirang-tuwiran sa mabuting ilaw",
+      "upload": "I-upload ang Selfie",
+      "retake": "Kunan Muli",
+      "verifying": "Sinuri...",
+      "success": "Matagumpay na napatunayan! Handang gumawa na.",
+      "failed": "Nabigo ang pagpapatunay. Subukan muli."
+    }
+  },
+  "home": {
+    "title": "Maging isang Bituin",
+    "welcome": "Maligayang pagdating sa BeAstar",
+    "create_prompt": "Gumawa ng iyong unang Star Moment",
+    "recent": "Mga Kamakailang Gawa",
+    "trending": "Nag-trend",
+    "discover": "Tuklasin"
+  },
+  "create": {
+    "title": "Gumawa ng Star Moment",
+    "select_scenario": "Piliin ang isang senaryo",
+    "upload_selfie": "I-upload ang iyong selfie",
+    "choose_resolution": "Piliin ang resolusyon",
+    "resolution_720p": "720p (Pamantayan)",
+    "resolution_1080p": "1080p (HD)",
+    "resolution_4k": "4K (Premium)",
+    "generate": "Gumawa ng Video",
+    "generating": "Ginagawa ang iyong Star Moment...",
+    "estimated_time": "Karaniwang tumatagal ng 1-2 minuto",
+    "credits_required": "{credits} credits ang kailangan",
+    "insufficient_credits": "Kulang ang credits. Kumuha ng dagdag para magpatuloy."
+  },
+  "scenarios": {
+    "red_carpet": "Pagdating sa Red Carpet",
+    "movie_premiere": "Premyer ng Pelikula",
+    "concert": "Live na Konsiyerto",
+    "awards_show": "Parangal na Palatuntunan",
+    "music_video": "Music Video",
+    "fashion_show": "Fashion Show",
+    "interview": "Panayam ng Personalidad",
+    "social_media": "Bituin ng Social Media",
+    "sports_hero": "Bayani sa Isports",
+    "business_leader": "Pinuno sa Negosyo"
+  },
+  "generation": {
+    "status": {
+      "queued": "Naka-pila",
+      "rendering": "Ginagawa...",
+      "complete": "Tapos na!",
+      "failed": "Nabigo"
+    },
+    "progress": "Mga Pag-unlad: {percent}%",
+    "time_remaining": "Oras na natitira: {time}",
+    "error": {
+      "generic": "May nangyaring mali. Subukan muli.",
+      "timeout": "Nag-timeout ang paggawa. Subukan muli.",
+      "moderation_failed": "Nabigo ang moderation ng nilalaman. Subukan ang ibang larawan.",
+      "insufficient_credits": "Kulang ang credits. Bumili ng dagdag."
+    }
+  },
+  "share": {
+    "title": "Ibahagi ang Iyong Star Moment",
+    "video_ready": "Handang-handa na ang iyong video!",
+    "watch": "Panuorin",
+    "download": "I-download",
+    "share": "Ibahagi",
+    "publish": "I-publish",
+    "share_message": "Tignan ang aking Star Moment sa BeAstar!",
+    "copied": "Nakopya na ang link sa clipboard",
+    "published": "Na-publish na ang iyong Star Moment!"
+  },
+  "dream_threads": {
+    "title": "Mga Thread ng Pangarap",
+    "create": "Gumawa ng Thread ng Pangarap",
+    "goal_title": "Ang Iyong Layunin sa Pangarap",
+    "goal_title_placeholder": "Ano ang gusto mong maging?",
+    "goal_description": "Ilarawan ang iyong pangarap",
+    "goal_description_placeholder": "Sabihin sa amin tungkol sa iyong paglalakbay",
+    "net_worth": "Net Worth (Opsyonal)",
+    "net_worth_note": "Ito ay self-reported at hindi pa napapatunayan",
+    "create_thread": "Gumawa ng Thread",
+    "post_update": "I-post ang Update",
+    "update_placeholder": "Ano ang bago sa iyong paglalakbay?",
+    "follow": "Sundan",
+    "unfollow": "Huwag Sundan",
+    "followers": "{count} tagasunod",
+    "updates": "{count} mga update",
+    "encourage": "Pag-udyok",
+    "encouragements": "{count} mga pag-udyok",
+    "feed": "Iyong Feed",
+    "no_updates": "Wala pang mga update. Sundan ang ilang thread para makita ang mga ito rito."
+  },
+  "challenges": {
+    "title": "Mga Hamon",
+    "weekly": "Lingguhang Hamon",
+    "join": "Sumali sa Hamon",
+    "submit": "I-sumite ang Entry",
+    "vote": "Bumoto",
+    "votes": "{count} boto",
+    "leaderboard": "Talaan ng Nangunguna",
+    "ends_in": "Matatapos sa loob ng {time}",
+    "ended": "Natapos na ang hamon",
+    "prize": "Premyo: {prize}"
+  },
+  "leaderboard": {
+    "title": "Talaan ng Nangunguna",
+    "global": "Pandaigdig",
+    "country": "Bansa: {country}",
+    "rank": "Ranggo",
+    "name": "Pangalan",
+    "videos": "Mga Video",
+    "referrals": "Mga Referral",
+    "no_data": "Wala pang available na data"
+  },
+  "payments": {
+    "title": "I-upgrade ang Iyong Account",
+    "tiers": {
+      "free": "Libre",
+      "star": "Bituin",
+      "superstar": "Superstar",
+      "megastar": "Megastar"
+    },
+    "tier_description": {
+      "free": "3 araw-araw na paggawa, 720p resolusyon",
+      "star": "10 araw-araw na paggawa, 1080p resolusyon",
+      "superstar": "25 araw-araw na paggawa, 1080p resolusyon",
+      "megastar": "100 araw-araw na paggawa, 4K resolusyon"
+    },
+    "price": "{price} PHP",
+    "purchase": "Bumili Ngayon",
+    "success": "Matagumpay na pagbabayad! Na-upgrade na ang iyong account.",
+    "failed": "Nabigo ang pagbabayad. Subukan muli.",
+    "cancelled": "Nakansela ang pagbabayad"
+  },
+  "referrals": {
+    "title": "Imbitahan ang mga Kaibigan",
+    "description": "Ibahagi ang iyong referral code at kumita ng credits kapag nag-sign up ang mga kaibigan",
+    "your_code": "Iyong Code: {code}",
+    "share_code": "Ibahagi ang Code",
+    "earned": "Kumita ka na ng {credits} credits mula sa mga referral",
+    "how_it_works": "Paano ito gumagana",
+    "step1": "Ibahagi ang iyong natatanging referral code",
+    "step2": "Nag-sign up ang mga kaibigan gamit ang iyong code",
+    "step3": "Parehong nakakakuha kayo ng bonus credits"
+  },
+  "profile": {
+    "title": "Iyong Profile",
+    "edit": "I-edit ang Profile",
+    "stats": "Iyong Mga Estatik",
+    "total_videos": "Kabuuang Mga Video",
+    "total_followers": "Mga Tagasunod",
+    "total_following": "Sinusunod",
+    "credits": "Mga Credits",
+    "tier": "Antas",
+    "settings": "Mga Setting",
+    "logout": "Lumabas"
+  },
+  "errors": {
+    "network": "Error sa network. Mangyaring suriin ang iyong koneksyon.",
+    "server": "Error sa server. Subukan muli mamaya.",
+    "not_found": "Hindi natagpuan",
+    "unauthorized": "Hindi awtorisado. Mangyaring mag-log in.",
+    "forbidden": "Tinanggihan ang access",
+    "rate_limit": "Maraming request. Maghintay at subukan muli.",
+    "validation": "Mangyaring suriin ang iyong input at subukan muli"
+  },
+  "buttons": {
+    "ok": "OK",
+    "cancel": "Kanselahin",
+    "yes": "Oo",
+    "no": "Hindi",
+    "try_again": "Subukan Muli",
+    "continue": "Magpatuloy",
+    "next": "Susunod",
+    "back": "Bumalik",
+    "save": "I-save",
+    "delete": "I-delete"
+  },
+  "moderation": {
+    "ai_disclosure": "Nilalaman na Ginawa ng AI",
+    "content_policy": "Patakaran sa Nilalaman",
+    "report": "I-report",
+    "flagged": "Ang nilalamang ito ay minarkahan para sa pagsusuri"
+  }
+}
