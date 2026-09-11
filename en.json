@@ -1,0 +1,11 @@
+{
+  "signup_success": "Welcome to BeAstar, {display_name}!",
+  "signup_underage": "You must be at least 13 years old to sign up.",
+  "verification_required": "Please verify your face before generating videos.",
+  "daily_cap_reached": "You've reached your daily generation limit for the {tier} plan.",
+  "resolution_locked": "Upgrade your plan to unlock {resolution} videos.",
+  "generation_queued": "Your star moment is being created!",
+  "generation_ready": "Your video is ready. Time to share it with the world!",
+  "referral_bonus_earned": "You earned {credits} credits for referring a friend!",
+  "ai_disclosure_label": "AI-Generated · For Entertainment Purposes Only"
+}

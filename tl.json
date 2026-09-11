@@ -1,0 +1,11 @@
+{
+  "signup_success": "Maligayang pagdating sa BeAstar, {display_name}!",
+  "signup_underage": "Dapat ay hindi bababa sa 13 taong gulang para makapag-sign up.",
+  "verification_required": "Paki-verify muna ang iyong mukha bago gumawa ng video.",
+  "daily_cap_reached": "Naabot mo na ang iyong araw-araw na limitasyon sa {tier} plan.",
+  "resolution_locked": "I-upgrade ang iyong plan para ma-unlock ang {resolution} na video.",
+  "generation_queued": "Ginagawa na ang iyong star moment!",
+  "generation_ready": "Handa na ang iyong video. Oras na para ibahagi sa mundo!",
+  "referral_bonus_earned": "Nakakuha ka ng {credits} credits sa pag-refer ng kaibigan!",
+  "ai_disclosure_label": "Gawa ng AI · Para sa Aliwan Lamang"
+}
